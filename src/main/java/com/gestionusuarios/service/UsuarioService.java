@@ -3,6 +3,7 @@ package com.gestionusuarios.service;
 
 import com.gestionusuarios.entity.Usuario;
 import com.gestionusuarios.repository.UsuarioRepository;
+import com.gestionusuarios.exception.CorreoDuplicadoException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public class UsuarioService {
     }
 
     public Usuario guardar(Usuario usuario) {
+        
+        if(usuarioRepository.existsByCorreo(usuario.getCorreo())){
+            throw new CorreoDuplicadoException(usuario.getCorreo());
+        }
         return usuarioRepository.save(usuario);
     }
 
