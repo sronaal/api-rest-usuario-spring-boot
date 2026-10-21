@@ -20,10 +20,10 @@ public class Usuario{
     private String nombre;
 
     @Column(nullable = false, unique = true, length = 150)
-    private String password;
+    private String correo;
     
     @Column(nullable = false)
-    private String correo;
+    private String password;
 
     @Column(nullable = false)
     private boolean activo = true;
