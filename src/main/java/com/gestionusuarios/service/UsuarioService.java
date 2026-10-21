@@ -5,6 +5,7 @@ import com.gestionusuarios.entity.Usuario;
 import com.gestionusuarios.repository.UsuarioRepository;
 import com.gestionusuarios.exception.CorreoDuplicadoException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +14,15 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(
+        UsuarioRepository usuarioRepository,
+        PasswordEncoder passwordEncoder    
+    ) 
+    {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> listarTodos() {
@@ -35,6 +42,9 @@ public class UsuarioService {
         if(usuarioRepository.existsByCorreo(usuario.getCorreo())){
             throw new CorreoDuplicadoException(usuario.getCorreo());
         }
+
+        String passeordHash = passwordEncoder.encode(usuario.getPassword());
+        usuario.setPassword(passeordHash);
         return usuarioRepository.save(usuario);
     }
 
